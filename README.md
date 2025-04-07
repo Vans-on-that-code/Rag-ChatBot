@@ -1,82 +1,54 @@
-# Customer Support RAG Chatbot
+Customer Support RAG Chatbot
 
-This is a Retrieval-Augmented Generation (RAG) chatbot application built using Streamlit, LangChain, FAISS, and HuggingFace Embeddings. The chatbot is designed to answer user queries strictly based on the content of PDF and DOCX documents provided by the user. If the chatbot cannot find the answer within the documents, it responds with "I don't know based on the provided PDFs."
+This is a Retrieval-Augmented Generation (RAG) chatbot created with Streamlit, LangChain, FAISS, and HuggingFace Embeddings. The chatbot is programmed to give answers to user questions solely based on the content of PDF and DOCX documents supplied by the user. If the information cannot be retrieved from the documents, the chatbot will answer that it doesn't know.
 
-## Project Description
+Project Overview
 
-This chatbot loads documents (PDF/DOCX), splits them into manageable chunks, converts them into embeddings using a HuggingFace model, and indexes them using FAISS. When a user asks a question, the chatbot retrieves the most relevant chunks and uses a language model (hosted locally via LM Studio) to generate an answer.
+The chatbot imports documents, divides them into bite-sized pieces, creates vector embeddings, and indexes them in a FAISS index. When the user enters a query, the system fetches the most significant pieces and forwards them to a locally hosted language model (LLM) to generate a response.
 
-## Features
+Features
+  Imports and processes PDF and DOCX documents
+  Answers solely based on the content of the document
+  Returns fallback message if answer is not available in the data
+  Simple and interactive UI through Streamlit
+  Completely offline working using LM Studio
 
-- Accepts PDF and DOCX documents as input
-- Answers questions strictly from the content of the provided documents
-- Declines to answer if the information is not found in the documents
-- Simple and interactive web interface using Streamlit
-- Works locally without requiring any API keys
+Folder Structure
+ \data/: Directory for storing all your input documents
+main.py: Primary Python script with chatbot logic
+ requirements.txt: Python dependencies
+ README.md: Documentation
 
-## Folder Structure
+Prerequisites
 
-```
-RagChatbot/
-├── data/                 # Folder to store your PDF and DOCX files
-├── main.py               # Main application script
-├── requirements.txt      # Python dependencies
-└── README.md             # Project documentation
-```
+1.Python 3.9 or above
+2.LM Studio (installed on your machine)
+3.A local LLM such as meta-llama-3.1-8b-instruct set up in LM Studio
 
-## Requirements
+Setup
 
-- Python 3.9 or higher
-- LM Studio (local model runner)
-- LLM Model loaded in LM Studio (e.g., meta-llama-3.1-8b-instruct)
+1.Clone this repository using Git.
+2.Create a virtual environment to separate dependencies.
+3.Activate the virtual environment.
+4.Install all dependencies with pip and the requirements.txt file.
+5.Add your PDFs and DOCX files to the data/ folder.
+6.Start LM Studio and make sure your selected model is running at http://localhost:1234/v1.
 
-## Installation Steps
+7. Run the Streamlit app.
 
-### Step 1: Clone the Repository
+Running the Application
+ After the setup is finished:
+  1.Open your terminal and cd into the project directory.
+  2.Run the Streamlit app from the Streamlit command-line interface.
+  3.Open the given local URL in a browser to use the chatbot.
 
-```bash
-git clone https://github.com/your-username/rag-chatbot.git
-cd rag-chatbot
-```
+Usage
+1.Type a question into the text input field.
+2.The chatbot will answer solely based on the documents within the data/ folder.
+3.ource links or filenames from which the answers were obtained will be shown.
+4.If the chatbot is unable to answer from the data, it will answer with a fallback message.
 
-### Step 2: Set Up a Virtual Environment (Optional but Recommended)
+Notes
+If website data scraping is not required, delete or comment out the web scraping part from the code.
+Make sure the FAISS model and index are properly loaded upon every app start.
 
-```bash
-python -m venv venv
-venv\Scripts\activate    # On Windows
-source venv/bin/activate # On macOS/Linux
-```
-
-### Step 3: Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### Step 4: Add Documents
-
-Place your PDF and DOCX files in the `data/` folder. These documents will be used to generate answers.
-
-### Step 5: Run LM Studio
-
-Open LM Studio, start your model server, and ensure it runs at the base URL: `http://localhost:1234/v1`. The model used should be compatible with chat-style interactions (e.g., meta-llama-3.1-8b-instruct).
-
-### Step 6: Run the Application
-
-```bash
-streamlit run main.py
-```
-
-If you want to share the app on your local network:
-
-```bash
-streamlit run main.py --server.address 0.0.0.0 --server.port 8501
-```
-
-Then access the app using `http://localhost:8501` or `http://<your-ip>:8501`
-
-## Important Notes
-
-- The chatbot only responds using content extracted from the provided documents. It will not generate hallucinated or unrelated answers.
-- The phrase "I don't know based on the provided PDFs" is returned when the answer is not found in the indexed content.
-- Website scraping is currently included in the code. If you only want the bot to answer from PDFs, comment out or remove the `scrape_website()` function and related logic.
