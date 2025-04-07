@@ -1,0 +1,12 @@
+streamlit
+langchain
+langchain-community
+langchain-openai
+langchain-huggingface
+faiss-cpu
+beautifulsoup4
+requests
+python-docx
+streamlit-option-menu
+openai
+huggingface-hub
