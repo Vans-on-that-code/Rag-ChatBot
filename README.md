@@ -1,6 +1,6 @@
 Customer Support RAG Chatbot
 
-This is a Retrieval-Augmented Generation (RAG) chatbot created with Streamlit, LangChain, FAISS, and HuggingFace Embeddings. The chatbot is programmed to give answers to user questions solely based on the content of PDF and DOCX documents supplied by the user. If the information cannot be retrieved from the documents, the chatbot will answer that it doesn't know.
+This is a Retrieval-Augmented Generation (RAG) chatbot created with Streamlit, LangChain, FAISS, and HuggingFace Embeddings. The chatbot is programmed to give answers to user questions solely based on the content of PDF and DOCX documents it is trained on. If the information cannot be retrieved from the documents, the chatbot will answer that it doesn't know.
 
 Project Overview
 
