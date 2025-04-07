@@ -19,30 +19,26 @@ from bs4 import BeautifulSoup
 from langchain.schema import Document
 from langchain.prompts import PromptTemplate
 
-def load_documents_from_folder(folder_path):
+def load_documents_from_folder(folder_name="data"):
+    folder_path= Path(__file__).parent / folder_name
+
     all_docs = []
+    for file_path in folder_path.glob("*"):
+            try:
+                if file_path.suffix == ".pdf":
+                    loader = PyPDFDirectoryLoader(str(file_path))
+                elif file_path.suffix == ".docx":
+                    loader = Docx2txtLoader(str(file_path))
+                else:
+                    continue
+        
+                docs= loader.load()
+                all_docs.extend(docs)
 
-    for file_name in os.listdir(folder_path):
-        file_path=os.path.join(folder_path,file_name)
-        if file_name.endswith(".pdf"):
-            loader=PyPDFLoader(file_path)
-        elif file_name.endswith(".docx"):
-            loader = Docx2txtLoader(file_path)
-        else:
-            continue
-
-        docs= loader.load()
-        all_docs.extend(docs)
+            except Exception as e:
+                st.warning(f"failed to load {file_path.name}: {e}")
+    
     return all_docs
-def split_documents (documents, chunk_size=1000, chunk_overlap=0):
-    splitter= RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-    return splitter.split_documents(documents)
-
-
-
-folder_path= r"C:\udemy\data analyst\python\RagChatbot\data"
-documents = load_documents_from_folder(folder_path)
-split_docs= split_documents (documents)
 
 
 #scraping the website
@@ -65,19 +61,22 @@ def scrape_website():
             except:
                 pass
     return page_texts
-    
-website_docs = scrape_website()
-all_docs = documents+ website_docs
-chunks = split_documents(all_docs)
+
+def split_documents (docs, chunk_size=1000, chunk_overlap=0):
+    splitter= RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    return splitter.split_documents(docs)
 
 def create_vectorstore(documents):
-    splitter= RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-    split_docs=splitter.split_documents(documents)
-
 
     embeddings = HuggingFaceEmbeddings(model_name= "intfloat/e5-small-v2")
-    vectorstore=FAISS.from_documents(split_docs, embeddings)
-    return vectorstore
+    return FAISS.from_documents(documents, embeddings)
+
+
+local_docs=load_documents_from_folder("data")
+website_docs = scrape_website()
+all_docs = local_docs+website_docs
+chunks = split_documents(all_docs)
+    
 
 
 llm= ChatOpenAI (
@@ -87,8 +86,6 @@ llm= ChatOpenAI (
 
 vectorstore = create_vectorstore(chunks)
 retriever = vectorstore.as_retriever()
-
-
 qa_chain = RetrievalQA.from_chain_type(
     llm=llm,
     retriever=retriever,
