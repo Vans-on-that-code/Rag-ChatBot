@@ -20,13 +20,13 @@ from langchain.schema import Document
 from langchain.prompts import PromptTemplate
 
 def load_documents_from_folder(folder_name="data"):
-    folder_path= Path(__file__).parent / folder_name
+    folder_path= Path(os.getcwd()) / folder_name
 
     all_docs = []
     for file_path in folder_path.glob("*"):
             try:
                 if file_path.suffix == ".pdf":
-                    loader = PyPDFDirectoryLoader(str(file_path))
+                    loader = PyPDFLoader(str(file_path))
                 elif file_path.suffix == ".docx":
                     loader = Docx2txtLoader(str(file_path))
                 else:
@@ -109,7 +109,7 @@ if query:
     st.write("Answer")
 
     if "I don't know" in answer or len (answer.strip())==0:
-        st. warning("I don't know based on the provided PDFs")
+        st.warning("I don't know based on the provided PDFs")
     else:
         st.success(answer)
     
