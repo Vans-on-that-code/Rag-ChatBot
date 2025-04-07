@@ -81,7 +81,7 @@ def create_vectorstore(documents):
 
 
 llm= ChatOpenAI (
-    base_url = "http://10.50.44.86:1234/v1",
+    base_url = "https://6423-118-185-162-194.ngrok-free.app/v1",
     api_key="lm-studio",
     model_name="meta-llama-3.1-8b-instruct") 
 
